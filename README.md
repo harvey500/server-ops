@@ -8,6 +8,9 @@
 容器补丁重建后丢失，以及“容器健康但业务不正常”的验收问题。不是全能运维平台，
 不会因安装而获得服务器访问或修改权限。
 
+新增下载故障取证和部署前置检查：403 不自动推断 IP 被封，替代品依赖查当前官方资料，
+不因下载失败擅自迁到用户电脑。完成状态拆成安装、启动、连接、业务，并单列清理。
+
 ### 安装与调用
 
 将仓库克隆到 agent 支持的 skills 目录，命名 `server-ops`，或复制 `SKILL.md`、
@@ -29,6 +32,7 @@
 ```sh
 python scripts/ssh_diagnose.py --host approved-alias --seconds 15 --max-bytes 65536 -- docker logs --since 10m --tail 100 service-name
 python -m unittest discover -s scripts -p "test_*.py" -v
+python -B scripts/ops_status.py /path/to/private-record.json
 ```
 
 远端独立 guardian 管执行期限、同时读取两路输出并在完成/超时/超限时清理同组任务。
@@ -45,6 +49,10 @@ python -m unittest discover -s scripts -p "test_*.py" -v
 输出暴涨、遗留同组子进程、relay 被杀。Windows 会明确跳过 Linux 项目，CI 在 Linux
 运行。尚无独立 agent 行为评测，也未进行真实 SSH/Docker 集成测试，不能承诺零风险。
 
+离线状态工具检查声明的证据关联并推导完成/部分完成，不核验证据真伪，不自动探活；
+格式见 `references/preflight.md`。`references/evaluation-cases.md` 提供 7 个合成行为
+验收案例，尚未执行独立 agent 评测。没有联网下载脚本，不会自动处理 CDN 限制。
+
 MIT 许可证，harvey500。公开材料仅包含通用脱敏案例，不包含真实主机或凭据。
 
 ## English
@@ -52,6 +60,10 @@ MIT 许可证，harvey500。公开材料仅包含通用脱敏案例，不包含�
 An agent skill for **Linux / SSH / Docker Compose** operations: bounded diagnostics,
 durable deployments and business verification. Installation does not authorize
 server access or changes. It is not a general infrastructure platform.
+
+Download/preflight guidance avoids inferring IP bans from 403s, checks current
+dependencies and preserves the intended architecture. Installation, startup,
+connection, business verification and cleanup are reported separately.
 
 Clone into your host's supported skill directory as `server-ops`, or keep SKILL.md,
 agents/, scripts/, references/ and LICENSE together. Host discovery may need reload.
@@ -81,5 +93,10 @@ Tests cover portable request/transport contracts plus Linux normal/failing/hung
 commands, output floods, background group children and killed relays. Windows
 explicitly skips Linux tests; Linux CI runs them. Independent agent behavioral
 evaluation and actual SSH/Docker integration have not been performed.
+
+The offline ops_status.py checks declared evidence links and completion, not truth
+or live health. Its schema is in references/preflight.md. Seven synthetic semantic
+cases in references/evaluation-cases.md remain unevaluated by an independent agent.
+No network download helper or automatic CDN workaround is provided.
 
 MIT, harvey500. Published material contains no real host addresses or credentials.

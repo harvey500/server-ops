@@ -28,6 +28,16 @@ searches, full inspect/config dumps and customer record extraction. Limit time,
 bytes, rows and concurrency. Read-only queries can overload a host. Start on one
 host. Missing access is an evidence gap, not permission to install tools.
 
+For download failures, dependency/preflight disputes or an installation blocked
+before business verification, read [references/preflight.md](references/preflight.md).
+Record observed failures separately from proposed explanations: several 403s from
+one origin do not establish an IP ban. Use current official release/dependency
+information, not guesses about package contents or a sandbox's kernel.
+Exhaust bounded, authorized options within the user's intended deployment before
+handing work back. Do not silently move a server workload to the user's computer,
+expose a new public listener, uninstall the current component or install a VPN.
+Those are architecture/access changes, not ordinary download retries.
+
 For finite diagnostics, the bundled OpenSSH/Python helper enforces a remote
 deadline, output caps and owned-process-group cleanup:
 
@@ -66,6 +76,14 @@ Message services need expected processing, no unwanted self-trigger, deduplicati
 and unaffected ordinary traffic. Production event injection/test-record deletion
 need approval; prefer isolated fixtures. Recreate for durability only if authorized.
 
+Report installed, started, connected and business-verified as separate states;
+say "partially complete" when any required state or cleanup remains unverified.
+For an auditable handoff, optionally use the offline `scripts/ops_status.py` with
+the structured record described in preflight.md. It validates declared evidence
+links and derives completion, not the truth of the evidence or an automatic health
+check. Keep raw secrets/logs out of records. Never mark evidence verified just to
+make the validator pass.
+
 Report evidence, changes, uncertainty, recovery status and cleanup receipts for
 each owned diagnostic job. Closed SSH or healthy containers are not completion.
 Default to no background tasks. Persistent monitors need explicit request,
@@ -88,6 +106,11 @@ ownership, lifetime and stopping instructions.
 脱组子进程、不可中断任务、Docker daemon 接手的工作不在保证范围。客户端超时/断线
 不是完成；没回执就标记清理未确认，按授权重连复核，不宽泛 pkill，不盲用旧 PID。
 
+下载故障、前置依赖争议或安装阻塞时阅读 [前置检查](references/preflight.md)。
+把已观察失败与解释分开：同源多个 403 不证明 IP 被封。用当前官方发布/依赖说明，
+不凭印象判断包内容或内核缺陷。先在原部署目标内有限排查获授权方案，再交回用户；
+不擅自迁到用户电脑、开放公网监听、卸载原组件或装 VPN，这些是架构/访问变更。
+
 ### 修复与验收
 
 Compose 变更前读 [部署说明](references/deployment.md)。确认实际配置、镜像与挂载，
@@ -99,6 +122,11 @@ Compose 变更前读 [部署说明](references/deployment.md)。确认实际配�
 或业务副作用，不反复重启掩盖失败。分别验收进程、业务、持久性和诊断清理。消息服务
 测试正确处理、不自激、去重和普通消息；生产注入/删测试记录需授权，优先隔离 fixture。
 实际重建测试也需授权。
+
+分别报告已安装、已启动、已连接、业务验证；任一必需状态或清理未确认就说部分完成。
+可用离线 `scripts/ops_status.py` 校验前置说明中的结构化交接记录，检查证据关联并推导
+完成状态；它不核验证据真伪、不自动探活。记录不放原始秘密/日志，不为通过校验伪称
+证据已验证。
 
 最终说明证据、范围、未确认项、恢复及每项清理回执。SSH 关闭/容器健康不等于完成。
 默认不留后台任务；明确要求监控时说明归属、期限和停止方式。
