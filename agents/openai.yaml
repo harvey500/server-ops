@@ -1,0 +1,4 @@
+interface:
+  display_name: "Server Ops"
+  short_description: "Bounded SSH diagnosis and verified Docker repairs"
+  default_prompt: "Use $server-ops to diagnose this authorized Linux server, clean up your diagnostic jobs, and verify any approved repair."
